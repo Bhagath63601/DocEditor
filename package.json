@@ -1,0 +1,25 @@
+{
+  "name": "notebook",
+  "version": "1.0.0",
+  "description": "A secure, full-stack, real-time collaborative document editor built with React, Node.js, Socket.IO, and MongoDB.",
+  "main": "test_api.js",
+  "scripts": {
+    "start": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "npm start --prefix backend",
+    "frontend": "npm start --prefix frontend",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "dependencies": {
+    "@tiptap/extension-collaboration": "^2.27.2",
+    "@tiptap/extension-collaboration-cursor": "^2.26.2",
+    "y-websocket": "^3.0.0",
+    "yjs": "^13.6.30"
+  }
+}
