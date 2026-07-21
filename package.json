@@ -2,16 +2,22 @@
   "name": "notebook",
   "version": "1.0.0",
   "description": "A secure, full-stack, real-time collaborative document editor built with React, Node.js, Socket.IO, and MongoDB.",
-  "main": "test_api.js",
+  "main": "backend/server.js",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
   "scripts": {
     "start": "concurrently \"npm run backend\" \"npm run frontend\"",
     "backend": "npm start --prefix backend",
-    "frontend": "npm start --prefix frontend",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "frontend": "npm run dev --prefix frontend",
+    "build": "npm run build --prefix frontend",
+    "lint": "npm run lint --prefix frontend",
+    "test": "npm test --workspaces --if-present"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "type": "commonjs",
   "devDependencies": {
     "concurrently": "^9.2.1"

@@ -1,4 +1,4 @@
 @echo off
-cd frontend
+cd ../frontend
 cmd /c npm start
 pause

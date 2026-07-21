@@ -4,14 +4,8 @@ import { createPortal } from 'react-dom';
 const ActiveUsersTooltip = ({ users, currentUser, triggerRef, onMouseEnter, onMouseLeave }) => {
   const [coords, setCoords] = useState({ top: 0, left: 0 });
 
-  // Safety guard: Ensure users is an array
-  if (!Array.isArray(users) || users.length === 0) {
-    if (users) console.warn("ActiveUsersTooltip: users prop is not a valid array", users);
-    return null;
-  }
-
   useLayoutEffect(() => {
-    if (!triggerRef?.current) return;
+    if (!triggerRef?.current || !Array.isArray(users) || users.length === 0) return;
 
     const updatePosition = () => {
       const triggerRect = triggerRef.current.getBoundingClientRect();
@@ -44,7 +38,11 @@ const ActiveUsersTooltip = ({ users, currentUser, triggerRef, onMouseEnter, onMo
       window.removeEventListener('resize', updatePosition);
       window.removeEventListener('scroll', updatePosition, true);
     };
-  }, [triggerRef]);
+  }, [triggerRef, users]);
+
+  if (!Array.isArray(users) || users.length === 0) {
+    return null;
+  }
 
   const content = (
     <div 

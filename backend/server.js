@@ -10,6 +10,7 @@ const { setupWSConnection } = require('y-websocket/bin/utils');
 require('dotenv').config();
 
 const Document = require('./models/Document');
+const throttle = require('./utils/throttle');
 
 const app = express();
 const server = http.createServer(app);
@@ -43,21 +44,6 @@ const persistence = {
     }
   }
 };
-
-function throttle(func, wait) {
-  let timeout = null;
-  let latestArgs = null;
-
-  return function() {
-    latestArgs = arguments;
-    if (!timeout) {
-      timeout = setTimeout(async () => {
-        await func.apply(this, latestArgs);
-        timeout = null;
-      }, wait);
-    }
-  };
-}
 
 const docs = require('y-websocket/bin/utils').docs;
 

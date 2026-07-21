@@ -1,1 +1,31 @@
-node_modules
+# Dependency directories
+node_modules/
+
+# Environment files
+.env
+.env.*
+backend/.env
+frontend/.env
+
+# Build outputs
+dist/
+build/
+coverage/
+
+# AI workspace folders and temporary logs
+brain/
+*.log
+frontend/build_error.txt
+
+# Editor configurations
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# OS Files
+Thumbs.db
+.DS_Store
