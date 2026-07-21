@@ -170,27 +170,35 @@ const DocumentPage = () => {
         if (!collab?.ydoc) return;
         const ycomments = collab.ydoc.getArray('comments');
         
-        // Clean up unverified mock comments (Alex / Sam) from previous template sessions
-        try {
-            collab.ydoc.transact(() => {
-                let i = 0;
-                while (i < ycomments.length) {
-                    const comment = ycomments.get(i);
-                    if (comment && (comment.author === 'Alex' || comment.author === 'Sam')) {
-                        ycomments.delete(i, 1);
-                    } else {
-                        i++;
+        const syncAndCleanComments = () => {
+            let changed = false;
+            try {
+                collab.ydoc.transact(() => {
+                    let i = 0;
+                    while (i < ycomments.length) {
+                        const comment = ycomments.get(i);
+                        const author = (comment && typeof comment.get === 'function') ? comment.get('author') : (comment?.author);
+                        if (comment && (author === 'Alex' || author === 'Sam')) {
+                            ycomments.delete(i, 1);
+                            changed = true;
+                        } else {
+                            i++;
+                        }
                     }
-                }
-            });
-        } catch (e) {
-            console.error('[ERROR] Error cleaning up comments:', e);
-        }
-        
-        setComments(ycomments.toArray());
+                });
+            } catch (e) {
+                console.error('[ERROR] Error cleaning up comments:', e);
+            }
+            
+            if (!changed) {
+                setComments(ycomments.toArray());
+            }
+        };
+
+        syncAndCleanComments();
         
         const observeComments = () => {
-            setComments(ycomments.toArray());
+            syncAndCleanComments();
         };
         ycomments.observe(observeComments);
         return () => {
@@ -217,7 +225,8 @@ const DocumentPage = () => {
         const ycomments = collab.ydoc.getArray('comments');
         for (let i = 0; i < ycomments.length; i++) {
             const comment = ycomments.get(i);
-            if (comment && comment.id === commentId) {
+            const id = (comment && typeof comment.get === 'function') ? comment.get('id') : (comment?.id);
+            if (comment && id === commentId) {
                 ycomments.delete(i, 1);
                 break;
             }
@@ -355,44 +364,52 @@ const DocumentPage = () => {
                                         <p style={{ fontSize: '0.75rem', color: '#8c9ba5', marginTop: '0.25rem', lineHeight: '1.4' }}>Start the conversation by adding a comment below.</p>
                                     </div>
                                 ) : (
-                                    comments.map((comment) => (
-                                        <div key={comment.id} className="comment-card">
-                                            <div className="comment-card-header">
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                                    <img 
-                                                        src={comment.avatar} 
-                                                        alt={comment.author} 
-                                                        className="comment-avatar"
-                                                        style={{ borderColor: comment.color || '#3b82f6' }}
-                                                    />
-                                                    <div className="comment-meta">
-                                                        <span className="comment-author">{comment.author}</span>
-                                                        <span className="comment-time">{comment.time}</span>
+                                    comments.map((comment, index) => {
+                                        const commentId = (comment && typeof comment.get === 'function') ? comment.get('id') : (comment?.id);
+                                        const commentAuthor = (comment && typeof comment.get === 'function') ? comment.get('author') : (comment?.author);
+                                        const commentAvatar = (comment && typeof comment.get === 'function') ? comment.get('avatar') : (comment?.avatar);
+                                        const commentColor = (comment && typeof comment.get === 'function') ? comment.get('color') : (comment?.color);
+                                        const commentTime = (comment && typeof comment.get === 'function') ? comment.get('time') : (comment?.time);
+                                        const commentText = (comment && typeof comment.get === 'function') ? comment.get('text') : (comment?.text);
+                                        return (
+                                            <div key={commentId ? `${commentId}-${index}` : index} className="comment-card">
+                                                <div className="comment-card-header">
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                                        <img 
+                                                            src={commentAvatar} 
+                                                            alt={commentAuthor} 
+                                                            className="comment-avatar"
+                                                            style={{ borderColor: commentColor || '#3b82f6' }}
+                                                        />
+                                                        <div className="comment-meta">
+                                                            <span className="comment-author">{commentAuthor}</span>
+                                                            <span className="comment-time">{commentTime}</span>
+                                                        </div>
                                                     </div>
+                                                    <button 
+                                                        onClick={() => handleDeleteComment(commentId)}
+                                                        style={{
+                                                            background: 'none',
+                                                            border: 'none',
+                                                            color: 'rgba(255, 255, 255, 0.3)',
+                                                            cursor: 'pointer',
+                                                            padding: '4px',
+                                                            borderRadius: '4px',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            transition: 'all 0.2s ease',
+                                                        }}
+                                                        className="comment-delete-btn"
+                                                        title="Delete Comment"
+                                                    >
+                                                        <Trash2 size={14} />
+                                                    </button>
                                                 </div>
-                                                <button 
-                                                    onClick={() => handleDeleteComment(comment.id)}
-                                                    style={{
-                                                        background: 'none',
-                                                        border: 'none',
-                                                        color: 'rgba(255, 255, 255, 0.3)',
-                                                        cursor: 'pointer',
-                                                        padding: '4px',
-                                                        borderRadius: '4px',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        transition: 'all 0.2s ease',
-                                                    }}
-                                                    className="comment-delete-btn"
-                                                    title="Delete Comment"
-                                                >
-                                                    <Trash2 size={14} />
-                                                </button>
+                                                <div className="comment-text">{commentText}</div>
                                             </div>
-                                            <div className="comment-text">{comment.text}</div>
-                                        </div>
-                                    ))
+                                        );
+                                    })
                                 )}
                             </div>
                             <div className="comment-input-area">
