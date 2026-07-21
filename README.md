@@ -11,13 +11,13 @@ A high-performance, full-stack, real-time collaborative document editor inspired
 
 ## 📸 DocEditor Preview
 
-![DocEditor Interface Mockup](screenshots/doc_editor_mockup.png)
+![DocEditor Interface Mockup](screenshots/doc_editor_mockup_sam.png)
 
 ---
 
 ## 🎬 Usage & Feature Demo
 
-![DocEditor Usage Demo](screenshots/doc_editor_usage_demo.png)
+![DocEditor Usage Demo](screenshots/doc_editor_usage_demo_sam.png)
 
 ---
 
