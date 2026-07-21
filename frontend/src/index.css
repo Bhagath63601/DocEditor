@@ -2130,4 +2130,150 @@ option:checked, option:hover {
   transform: translateY(-1px);
 }
 
+/* ==========================================================================
+   DESIGN REFINE & NEON GLASSMORPHIC OVERRIDES (DocEditor Clean UX)
+   ========================================================================== */
+
+/* Thin, Translucent Dark System Scrollbars */
+::-webkit-scrollbar {
+  width: 8px !important;
+  height: 8px !important;
+}
+::-webkit-scrollbar-track {
+  background: rgba(6, 9, 25, 0.4) !important;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-radius: 9999px !important;
+  border: 2px solid #060919 !important;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Toolbar Capsule Fix: Prevent overlap & wrapping */
+.toolbar-container.glass {
+  max-width: 92% !important;
+  overflow: hidden !important;
+  padding: 0.35rem 0.75rem !important;
+}
+.toolbar-inner {
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  padding: 2px 0 !important;
+  gap: 0.25rem !important;
+}
+.toolbar-inner::-webkit-scrollbar {
+  display: none !important;
+}
+.toolbar-group {
+  gap: 0.15rem !important;
+  padding: 0 0.35rem !important;
+}
+
+/* Sidebar Overrides: Shift from gold to glowing blue neon */
+.sidebar {
+  background: rgba(13, 17, 35, 0.85) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+.sidebar-brand-text {
+  font-family: 'Outfit', sans-serif !important;
+  font-weight: 800 !important;
+  background: linear-gradient(135deg, #00f2fe, #4facfe) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  letter-spacing: -0.02em !important;
+}
+.sidebar-new-doc-btn {
+  background: linear-gradient(135deg, #00f2fe, #4facfe) !important;
+  color: #050814 !important;
+  box-shadow: 0 4px 14px rgba(0, 242, 254, 0.3) !important;
+  border: none !important;
+}
+.sidebar-new-doc-btn:hover {
+  box-shadow: 0 8px 22px rgba(0, 242, 254, 0.5) !important;
+  transform: translateY(-2px) !important;
+}
+.sidebar-nav-link:hover {
+  color: #00f2fe !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+}
+.sidebar-nav-link.active {
+  background: linear-gradient(90deg, rgba(0, 242, 254, 0.08) 0%, rgba(0, 242, 254, 0.01) 100%) !important;
+  color: #f8fafc !important;
+}
+.sidebar-nav-link-indicator {
+  background: linear-gradient(180deg, #00f2fe, #4facfe) !important;
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.8) !important;
+}
+.sidebar-user-avatar {
+  border-color: #00f2fe !important;
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.25) !important;
+  border-radius: 50% !important;
+}
+
+/* Dashboard Overrides */
+.dashboard-container {
+  background: #060919 !important;
+  min-height: 100vh !important;
+  padding: 3rem 2.5rem !important;
+  color: #f8fafc !important;
+}
+.search-input {
+  background: rgba(13, 17, 35, 0.7) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #f8fafc !important;
+  outline: none !important;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2) !important;
+  transition: all var(--transition-fast) !important;
+}
+.search-input:focus {
+  border-color: #00f2fe !important;
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.25) !important;
+}
+.view-btn {
+  transition: all var(--transition-fast) !important;
+}
+.view-btn:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Document Grid Cards */
+.doc-card {
+  background: rgba(13, 17, 35, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35) !important;
+  color: #f8fafc !important;
+  transition: all var(--transition-normal) !important;
+}
+.doc-card:hover {
+  transform: translateY(-4px) scale(1.01) !important;
+  border-color: #00f2fe !important;
+  box-shadow: 0 15px 35px rgba(0, 242, 254, 0.15), 0 5px 15px rgba(0, 0, 0, 0.4) !important;
+}
+.doc-card::after {
+  background: linear-gradient(90deg, #00f2fe, #4facfe) !important;
+}
+
+/* Primary Button in Dashboard */
+.btn-primary, .dashboard-container .btn-primary {
+  background: linear-gradient(135deg, #00f2fe, #4facfe) !important;
+  color: #050814 !important;
+  font-weight: 700 !important;
+  border: none !important;
+  box-shadow: 0 4px 14px rgba(0, 242, 254, 0.3) !important;
+  transition: all var(--transition-fast) !important;
+}
+.btn-primary:hover, .dashboard-container .btn-primary:hover {
+  box-shadow: 0 8px 22px rgba(0, 242, 254, 0.5) !important;
+  transform: translateY(-1.5px) !important;
+  filter: brightness(1.05) !important;
+}
+
 

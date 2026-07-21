@@ -20,34 +20,34 @@ const Header = React.memo(({
     };
 
     return (
-        <header className="toolbar" style={{ justifyContent: 'space-between', height: '64px', backgroundColor: '#090d1f', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <header className="toolbar" style={{ justifyContent: 'space-between', height: '64px', backgroundColor: '#090d1f', borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '0 1.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
                 <button 
                     className="toolbar-btn" 
                     onClick={onNavigateBack}
-                    style={{ marginRight: '0.5rem' }}
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 >
                     <ArrowLeft size={20} />
                 </button>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', backgroundColor: '#2563eb', borderRadius: '6px', color: 'white', boxShadow: '0 0 10px rgba(37,99,235,0.4)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', backgroundColor: '#2563eb', borderRadius: '8px', color: 'white', boxShadow: '0 0 12px rgba(37,99,235,0.5)' }}>
                         <FileText size={18} />
                     </div>
-                    <span style={{ fontSize: '1rem', fontWeight: '700', color: '#f8fafc', display: 'flex', alignItems: 'center', gap: '0.35rem', fontFamily: "'Outfit', sans-serif" }}>
+                    <span style={{ fontSize: '1.05rem', fontWeight: '700', color: '#f8fafc', display: 'flex', alignItems: 'center', gap: '0.4rem', fontFamily: "'Outfit', sans-serif" }}>
                         {docTitle || 'Untitled'} <ChevronDown size={16} style={{ color: '#8c9ba5', cursor: 'pointer' }} />
                     </span>
                 </div>
             </div>
             
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1.75rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'rgba(255, 255, 255, 0.5)', fontSize: '0.85rem', fontWeight: '500' }}>
                     {saving ? (
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                             <Cloud size={14} className="fade-in" /> Saving...
                         </span>
                     ) : (
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                            <Check size={14} color="#10b981" /> Saved
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                            <Check size={14} color="#00f2fe" style={{ filter: 'drop-shadow(0 0 4px rgba(0, 242, 254, 0.5))' }} /> Saved
                         </span>
                     )}
                 </div>
@@ -55,16 +55,18 @@ const Header = React.memo(({
                 <Profiler id="ActiveUsers" onRender={logProfile}>
                     <ActiveUsers provider={provider} currentUser={currentUser} />
                 </Profiler>
-
-                {showShareButton && (
-                    <button className="btn header-share-btn" style={{ padding: '0.45rem 1rem', display: 'flex', alignItems: 'center', gap: '0.4rem', borderRadius: '0.5rem' }} onClick={onShareClick}>
-                        <Share2 size={16} /> Share
+ 
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    {showShareButton && (
+                        <button className="btn header-share-btn" style={{ padding: '0.5rem 1.15rem', display: 'flex', alignItems: 'center', gap: '0.4rem', borderRadius: '0.5rem', fontSize: '0.875rem' }} onClick={onShareClick}>
+                            <Share2 size={16} /> Share
+                        </button>
+                    )}
+                    
+                    <button className="btn btn-outline" style={{ padding: '0.5rem 1.15rem', border: '1px solid rgba(255,255,255,0.1)', color: '#f8fafc', borderRadius: '0.5rem', fontSize: '0.875rem', background: 'rgba(255, 255, 255, 0.02)' }} onClick={onSaveTitleClick} disabled={saveDisabled}>
+                        {saving ? 'Saving...' : 'Save Title'}
                     </button>
-                )}
-                
-                <button className="btn btn-outline" style={{ padding: '0.45rem 1rem', border: '1px solid rgba(255,255,255,0.1)', color: '#f8fafc', borderRadius: '0.5rem' }} onClick={onSaveTitleClick} disabled={saveDisabled}>
-                    {saving ? 'Saving...' : 'Save Title'}
-                </button>
+                </div>
             </div>
         </header>
     );

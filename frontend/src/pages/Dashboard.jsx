@@ -83,7 +83,7 @@ const Dashboard = () => {
           <h1 style={{ fontSize: '2.75rem', fontWeight: '900', letterSpacing: '-0.04em', color: 'var(--text)', marginBottom: '0.25rem' }}>
             Your Workspace
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '1.125rem', fontWeight: '500' }}>Welcome back, {user?.firstName || 'User'}!</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: '1.125rem', fontWeight: '500' }}>Welcome back, {user?.firstName?.includes('Bhagath') ? 'Sam' : (user?.firstName || 'User')}!</p>
         </div>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }} className="fade-in-up">

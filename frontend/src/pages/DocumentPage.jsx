@@ -36,13 +36,18 @@ const DocumentPage = () => {
         setEditor(editorInstance);
     }, []);
 
-    const userInfo = useMemo(() => ({
-        id: user?.id,
-        name: user?.fullName || user?.username || 'Anonymous',
-        color: ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'][Math.floor(Math.random() * 6)],
-        avatar: user?.imageUrl,
+    const userInfo = useMemo(() => {
+        const isBhagath = user?.fullName?.includes('Bhagath') || user?.username?.includes('bhagath') || user?.primaryEmailAddress?.emailAddress?.includes('bhagath');
+        const displayName = isBhagath ? 'Sam' : (user?.fullName || user?.username || 'Anonymous');
+        const displayAvatar = isBhagath ? 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150' : (user?.imageUrl || '');
+        return {
+            id: user?.id,
+            name: displayName,
+            color: ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'][Math.floor(Math.random() * 6)],
+            avatar: displayAvatar,
+        };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }), [user?.id, user?.fullName, user?.username, user?.imageUrl]);
+    }, [user?.id, user?.fullName, user?.username, user?.imageUrl]);
 
     useEffect(() => {
         console.log('[DEBUG] Component mounted');
@@ -156,14 +161,6 @@ const DocumentPage = () => {
     useEffect(() => {
         if (!collab?.ydoc) return;
         const ycomments = collab.ydoc.getArray('comments');
-        
-        // Load existing comments or set defaults if empty
-        if (ycomments.length === 0) {
-            ycomments.push([
-                { id: 1, author: 'Alex', avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150', text: 'Looks great, Sam!', time: '1m ago', color: '#3b82f6' },
-                { id: 2, author: 'Sam', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150', text: 'Updates made. Reviewing section 2.', time: 'Just Now', color: '#10b981' }
-            ]);
-        }
         
         setComments(ycomments.toArray());
         
@@ -314,23 +311,31 @@ const DocumentPage = () => {
                                 <button className="comments-options-btn">•••</button>
                             </div>
                             <div className="comments-list">
-                                {comments.map((comment) => (
-                                    <div key={comment.id} className="comment-card">
-                                        <div className="comment-card-header">
-                                            <img 
-                                                src={comment.avatar} 
-                                                alt={comment.author} 
-                                                className="comment-avatar"
-                                                style={{ borderColor: comment.color || '#3b82f6' }}
-                                            />
-                                            <div className="comment-meta">
-                                                <span className="comment-author">{comment.author}</span>
-                                                <span className="comment-time">{comment.time}</span>
-                                            </div>
-                                        </div>
-                                        <div className="comment-text">{comment.text}</div>
+                                {comments.length === 0 ? (
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#8c9ba5', textAlign: 'center', padding: '2rem 1.5rem', opacity: 0.85 }}>
+                                        <MessageSquare size={36} style={{ marginBottom: '1rem', color: '#00f2fe', filter: 'drop-shadow(0 0 8px rgba(0, 242, 254, 0.4))' }} />
+                                        <p style={{ fontSize: '0.9rem', fontWeight: '700', color: '#f8fafc', fontFamily: "'Outfit', sans-serif" }}>No comments yet</p>
+                                        <p style={{ fontSize: '0.75rem', color: '#8c9ba5', marginTop: '0.25rem', lineHeight: '1.4' }}>Start the conversation by adding a comment below.</p>
                                     </div>
-                                ))}
+                                ) : (
+                                    comments.map((comment) => (
+                                        <div key={comment.id} className="comment-card">
+                                            <div className="comment-card-header">
+                                                <img 
+                                                    src={comment.avatar} 
+                                                    alt={comment.author} 
+                                                    className="comment-avatar"
+                                                    style={{ borderColor: comment.color || '#3b82f6' }}
+                                                />
+                                                <div className="comment-meta">
+                                                    <span className="comment-author">{comment.author}</span>
+                                                    <span className="comment-time">{comment.time}</span>
+                                                </div>
+                                            </div>
+                                            <div className="comment-text">{comment.text}</div>
+                                        </div>
+                                    ))
+                                )}
                             </div>
                             <div className="comment-input-area">
                                 <input 

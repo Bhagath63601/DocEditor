@@ -144,24 +144,33 @@ const Sidebar = ({
           </button>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', padding: '0.25rem 0.5rem', marginBottom: '1.25rem' }}>
-          <div style={{ position: 'relative' }}>
-            <img 
-              src={user?.imageUrl} 
-              alt="User" 
-              className="sidebar-user-avatar"
-            />
-            <div style={{ position: 'absolute', bottom: '-2px', right: '-2px', width: '12px', height: '12px', backgroundColor: '#22c55e', border: '2px solid #050814', borderRadius: '50%' }}></div>
-          </div>
-          <div style={{ overflow: 'hidden' }}>
-            <p style={{ fontSize: '0.9rem', fontWeight: '700', color: 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {user?.fullName || user?.username}
-            </p>
-            <p style={{ fontSize: '0.75rem', color: 'var(--royal-text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {user?.primaryEmailAddress?.emailAddress}
-            </p>
-          </div>
-        </div>
+        {(() => {
+          const isBhagath = user?.fullName?.includes('Bhagath') || user?.username?.includes('bhagath') || user?.primaryEmailAddress?.emailAddress?.includes('bhagath');
+          const displayName = isBhagath ? 'Sam' : (user?.fullName || user?.username || 'User');
+          const displayEmail = isBhagath ? 'sam@doceditor.com' : (user?.primaryEmailAddress?.emailAddress || '');
+          const displayAvatar = isBhagath ? 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150' : user?.imageUrl;
+
+          return (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', padding: '0.25rem 0.5rem', marginBottom: '1.25rem' }}>
+              <div style={{ position: 'relative' }}>
+                <img 
+                  src={displayAvatar} 
+                  alt="User" 
+                  className="sidebar-user-avatar"
+                />
+                <div style={{ position: 'absolute', bottom: '-2px', right: '-2px', width: '12px', height: '12px', backgroundColor: '#22c55e', border: '2px solid #050814', borderRadius: '50%' }}></div>
+              </div>
+              <div style={{ overflow: 'hidden' }}>
+                <p style={{ fontSize: '0.9rem', fontWeight: '700', color: 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {displayName}
+                </p>
+                <p style={{ fontSize: '0.75rem', color: 'var(--royal-text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {displayEmail}
+                </p>
+              </div>
+            </div>
+          );
+        })()}
         
         <SignOutButton>
           <button 

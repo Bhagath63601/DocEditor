@@ -59,10 +59,10 @@ const ActiveUsers = React.memo(({ provider, currentUser }) => {
                                             width: 32, 
                                             height: 32, 
                                             borderRadius: '50%', 
-                                            border: `2px solid ${isTyping ? '#10b981' : 'var(--bg)'}`, 
+                                            border: `2.5px solid ${u.color || '#3b82f6'}`, 
                                             objectFit: 'cover',
-                                            boxShadow: 'var(--shadow-sm)',
-                                            transition: 'border-color 0.2s ease'
+                                            boxShadow: `0 0 10px ${u.color || '#3b82f6'}`,
+                                            transition: 'all 0.25s ease'
                                         }} 
                                     />
                                 ) : (
@@ -72,16 +72,16 @@ const ActiveUsers = React.memo(({ provider, currentUser }) => {
                                             width: 32, 
                                             height: 32, 
                                             borderRadius: '50%', 
-                                            border: `2px solid ${isTyping ? '#10b981' : 'var(--bg)'}`, 
+                                            border: `2.5px solid ${u.color || '#3b82f6'}`, 
                                             backgroundColor: u?.color || '#cbd5e1', 
                                             display: 'flex', 
                                             alignItems: 'center', 
                                             justifyContent: 'center', 
                                             fontSize: '13px', 
                                             color: '#fff', 
-                                            fontWeight: '600',
-                                            boxShadow: 'var(--shadow-sm)',
-                                            transition: 'border-color 0.2s ease'
+                                            fontWeight: '700',
+                                            boxShadow: `0 0 10px ${u.color || '#3b82f6'}`,
+                                            transition: 'all 0.25s ease'
                                         }}
                                     >
                                         {u?.name?.charAt(0)?.toUpperCase()}
