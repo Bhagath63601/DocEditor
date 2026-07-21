@@ -32,9 +32,9 @@ const ActiveUsers = React.memo(({ provider, currentUser }) => {
 
     return (
         <ErrorBoundary>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
                 {/* Stacked avatars */}
-                <div className="avatar-stack" style={{ display: 'flex', alignItems: 'center' }}>
+                <div className="avatar-stack" style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
                     {displayUsers.map((u, i) => {
                         const isTyping = u?.isTyping;
                         const statusLabel = isTyping ? 'Typing' : 'Viewing';
@@ -48,6 +48,7 @@ const ActiveUsers = React.memo(({ provider, currentUser }) => {
                                     position: 'relative',
                                     marginLeft: i > 0 ? '-10px' : '0', 
                                     zIndex: 100 - i,
+                                    flexShrink: 0,
                                 }}
                             >
                                 {u?.avatar ? (
@@ -160,7 +161,9 @@ const ActiveUsers = React.memo(({ provider, currentUser }) => {
                         fontWeight: '600', 
                         background: 'rgba(255, 255, 255, 0.05)',
                         border: '1px solid var(--border)',
-                        cursor: 'default'
+                        cursor: 'default',
+                        flexShrink: 0,
+                        whiteSpace: 'nowrap'
                     }}
                 >
                     <span style={{ fontSize: '1.1em' }}>👥</span> {activeUsers.length} editing
