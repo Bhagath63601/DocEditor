@@ -150,6 +150,46 @@ const DocumentPage = () => {
         }
     }, [collab, userInfo]); 
 
+    const [comments, setComments] = useState([]);
+    const [newCommentText, setNewCommentText] = useState('');
+
+    useEffect(() => {
+        if (!collab?.ydoc) return;
+        const ycomments = collab.ydoc.getArray('comments');
+        
+        // Load existing comments or set defaults if empty
+        if (ycomments.length === 0) {
+            ycomments.push([
+                { id: 1, author: 'Alex', avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150', text: 'Looks great, Sam!', time: '1m ago', color: '#3b82f6' },
+                { id: 2, author: 'Sam', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150', text: 'Updates made. Reviewing section 2.', time: 'Just Now', color: '#10b981' }
+            ]);
+        }
+        
+        setComments(ycomments.toArray());
+        
+        const observeComments = () => {
+            setComments(ycomments.toArray());
+        };
+        ycomments.observe(observeComments);
+        return () => {
+            ycomments.unobserve(observeComments);
+        };
+    }, [collab]);
+
+    const handleAddComment = useCallback(() => {
+        if (!newCommentText.trim() || !collab?.ydoc) return;
+        const ycomments = collab.ydoc.getArray('comments');
+        ycomments.push([{
+            id: Date.now(),
+            author: userInfo.name || 'Anonymous',
+            avatar: userInfo.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${userInfo.name || 'Anonymous'}`,
+            text: newCommentText,
+            time: 'Just Now',
+            color: userInfo.color || '#3b82f6'
+        }]);
+        setNewCommentText('');
+    }, [newCommentText, collab, userInfo]);
+
     useEffect(() => {
         fetchDocument();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -226,42 +266,81 @@ const DocumentPage = () => {
                 </ErrorBoundary>
                 
                 <ErrorBoundary>
-                    <div className="editor-wrapper">
-                        <div className="document-layout-container">
-                            <div className="ruler-row">
-                                <div className="ruler-corner" />
-                                <Profiler id="Ruler" onRender={logProfile}>
-                                    <Ruler margins={pageMargins} setMargins={setPageMargins} />
-                                </Profiler>
-                            </div>
-                            <div className="paper-row">
-                                <VerticalRuler />
-                                <div 
-                                    className="paper fade-in" 
-                                    style={{
-                                        paddingLeft: `${pageMargins.left}px`,
-                                        paddingRight: `${pageMargins.right}px`
-                                    }}
-                                >
-                                    <Profiler id="TitleInput" onRender={logProfile}>
-                                        <TitleInput 
-                                            initialTitle={doc.title}
-                                            onSave={handleTitleSave}
-                                            disabled={!canEdit}
-                                        />
-                                    </Profiler>
-                                    
-                                    <Profiler id="EditorContainer" onRender={logProfile}>
-                                        <EditorContainer 
-                                            id={id}
-                                            role={role}
-                                            ydoc={collab.ydoc}
-                                            provider={collab.provider}
-                                            userInfo={userInfo}
-                                            onEditorReady={handleEditorReady}
-                                        />
+                    <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+                        <div className="editor-wrapper" style={{ flex: 1 }}>
+                            <div className="document-layout-container">
+                                <div className="ruler-row">
+                                    <div className="ruler-corner" />
+                                    <Profiler id="Ruler" onRender={logProfile}>
+                                        <Ruler margins={pageMargins} setMargins={setPageMargins} />
                                     </Profiler>
                                 </div>
+                                <div className="paper-row">
+                                    <VerticalRuler />
+                                    <div 
+                                        className="paper fade-in" 
+                                        style={{
+                                            paddingLeft: `${pageMargins.left}px`,
+                                            paddingRight: `${pageMargins.right}px`
+                                        }}
+                                    >
+                                        <Profiler id="TitleInput" onRender={logProfile}>
+                                            <TitleInput 
+                                                initialTitle={doc.title}
+                                                onSave={handleTitleSave}
+                                                disabled={!canEdit}
+                                            />
+                                        </Profiler>
+                                        
+                                        <Profiler id="EditorContainer" onRender={logProfile}>
+                                            <EditorContainer 
+                                                id={id}
+                                                role={role}
+                                                ydoc={collab.ydoc}
+                                                provider={collab.provider}
+                                                userInfo={userInfo}
+                                                onEditorReady={handleEditorReady}
+                                            />
+                                        </Profiler>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Real-time Collaborative Comments Sidebar */}
+                        <div className="comments-sidebar">
+                            <div className="comments-header">
+                                <h3>Comments</h3>
+                                <button className="comments-options-btn">•••</button>
+                            </div>
+                            <div className="comments-list">
+                                {comments.map((comment) => (
+                                    <div key={comment.id} className="comment-card">
+                                        <div className="comment-card-header">
+                                            <img 
+                                                src={comment.avatar} 
+                                                alt={comment.author} 
+                                                className="comment-avatar"
+                                                style={{ borderColor: comment.color || '#3b82f6' }}
+                                            />
+                                            <div className="comment-meta">
+                                                <span className="comment-author">{comment.author}</span>
+                                                <span className="comment-time">{comment.time}</span>
+                                            </div>
+                                        </div>
+                                        <div className="comment-text">{comment.text}</div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="comment-input-area">
+                                <input 
+                                    type="text" 
+                                    placeholder="Add a comment..." 
+                                    value={newCommentText} 
+                                    onChange={(e) => setNewCommentText(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && handleAddComment()}
+                                />
+                                <button onClick={handleAddComment}>Send</button>
                             </div>
                         </div>
                     </div>
