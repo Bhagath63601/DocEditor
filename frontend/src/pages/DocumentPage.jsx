@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useUser, useAuth } from '@clerk/clerk-react';
 import * as Y from 'yjs';
 import { WebsocketProvider } from 'y-websocket';
+import { MessageSquare, Trash2 } from 'lucide-react';
 
 import Toolbar from '../components/Toolbar';
 import Ruler from '../components/Ruler';
@@ -169,6 +170,23 @@ const DocumentPage = () => {
         if (!collab?.ydoc) return;
         const ycomments = collab.ydoc.getArray('comments');
         
+        // Clean up unverified mock comments (Alex / Sam) from previous template sessions
+        try {
+            collab.ydoc.transact(() => {
+                let i = 0;
+                while (i < ycomments.length) {
+                    const comment = ycomments.get(i);
+                    if (comment && (comment.author === 'Alex' || comment.author === 'Sam')) {
+                        ycomments.delete(i, 1);
+                    } else {
+                        i++;
+                    }
+                }
+            });
+        } catch (e) {
+            console.error('[ERROR] Error cleaning up comments:', e);
+        }
+        
         setComments(ycomments.toArray());
         
         const observeComments = () => {
@@ -193,6 +211,18 @@ const DocumentPage = () => {
         }]);
         setNewCommentText('');
     }, [newCommentText, collab, userInfo]);
+
+    const handleDeleteComment = useCallback((commentId) => {
+        if (!collab?.ydoc) return;
+        const ycomments = collab.ydoc.getArray('comments');
+        for (let i = 0; i < ycomments.length; i++) {
+            const comment = ycomments.get(i);
+            if (comment && comment.id === commentId) {
+                ycomments.delete(i, 1);
+                break;
+            }
+        }
+    }, [collab]);
 
     useEffect(() => {
         fetchDocument();
@@ -328,16 +358,37 @@ const DocumentPage = () => {
                                     comments.map((comment) => (
                                         <div key={comment.id} className="comment-card">
                                             <div className="comment-card-header">
-                                                <img 
-                                                    src={comment.avatar} 
-                                                    alt={comment.author} 
-                                                    className="comment-avatar"
-                                                    style={{ borderColor: comment.color || '#3b82f6' }}
-                                                />
-                                                <div className="comment-meta">
-                                                    <span className="comment-author">{comment.author}</span>
-                                                    <span className="comment-time">{comment.time}</span>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                                    <img 
+                                                        src={comment.avatar} 
+                                                        alt={comment.author} 
+                                                        className="comment-avatar"
+                                                        style={{ borderColor: comment.color || '#3b82f6' }}
+                                                    />
+                                                    <div className="comment-meta">
+                                                        <span className="comment-author">{comment.author}</span>
+                                                        <span className="comment-time">{comment.time}</span>
+                                                    </div>
                                                 </div>
+                                                <button 
+                                                    onClick={() => handleDeleteComment(comment.id)}
+                                                    style={{
+                                                        background: 'none',
+                                                        border: 'none',
+                                                        color: 'rgba(255, 255, 255, 0.3)',
+                                                        cursor: 'pointer',
+                                                        padding: '4px',
+                                                        borderRadius: '4px',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        transition: 'all 0.2s ease',
+                                                    }}
+                                                    className="comment-delete-btn"
+                                                    title="Delete Comment"
+                                                >
+                                                    <Trash2 size={14} />
+                                                </button>
                                             </div>
                                             <div className="comment-text">{comment.text}</div>
                                         </div>

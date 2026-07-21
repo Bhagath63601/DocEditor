@@ -2064,7 +2064,16 @@ option:checked, option:hover {
 .comment-card-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.75rem;
+}
+.comment-delete-btn {
+  opacity: 0.7;
+}
+.comment-delete-btn:hover {
+  opacity: 1 !important;
+  color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.1) !important;
 }
 .comment-avatar {
   width: 32px;
