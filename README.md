@@ -9,9 +9,15 @@ A high-performance, full-stack, real-time collaborative document editor inspired
 
 ---
 
-## 📸 Interface Preview
+## 📸 DocEditor Preview
 
-![DocEditor Interface Mockup](screenshots/collaborative_editor_mockup.png)
+![DocEditor Interface Mockup](screenshots/doc_editor_mockup.png)
+
+---
+
+## 🎬 Usage & Feature Demo
+
+![DocEditor Usage Demo](screenshots/doc_editor_usage_demo.png)
 
 ---
 
