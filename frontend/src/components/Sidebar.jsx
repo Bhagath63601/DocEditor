@@ -145,10 +145,9 @@ const Sidebar = ({
         </div>
 
         {(() => {
-          const isBhagath = user?.fullName?.includes('Bhagath') || user?.username?.includes('bhagath') || user?.primaryEmailAddress?.emailAddress?.includes('bhagath');
-          const displayName = isBhagath ? 'Sam' : (user?.fullName || user?.username || 'User');
-          const displayEmail = isBhagath ? 'sam@doceditor.com' : (user?.primaryEmailAddress?.emailAddress || '');
-          const displayAvatar = isBhagath ? 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150' : user?.imageUrl;
+          const displayName = user?.fullName || user?.username || 'User';
+          const displayEmail = user?.primaryEmailAddress?.emailAddress || '';
+          const displayAvatar = user?.imageUrl || '';
 
           return (
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', padding: '0.25rem 0.5rem', marginBottom: '1.25rem' }}>

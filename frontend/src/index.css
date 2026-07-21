@@ -1887,7 +1887,8 @@ option:checked, option:hover {
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45), 0 0 40px rgba(59, 130, 246, 0.05) !important;
   border-radius: 1.25rem !important;
   outline: none !important;
-  padding: 5rem 6rem !important;
+  padding-top: 5rem !important;
+  padding-bottom: 5rem !important;
 }
 
 /* ProseMirror and Editor Typographical Colors */
@@ -2016,9 +2017,7 @@ option:checked, option:hover {
   border-left: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 64px);
-  position: sticky;
-  top: 64px;
+  height: 100%;
 }
 .comments-header {
   padding: 1.25rem;
@@ -2151,26 +2150,35 @@ option:checked, option:hover {
   background: rgba(255, 255, 255, 0.15) !important;
 }
 
-/* Toolbar Capsule Fix: Prevent overlap & wrapping */
+/* Toolbar Capsule Fix: Prevent overlap, enable wrapping & sticky header placement */
 .toolbar-container.glass {
-  max-width: 92% !important;
-  overflow: hidden !important;
-  padding: 0.35rem 0.75rem !important;
+  max-width: 95% !important;
+  overflow: visible !important; /* Keep visible to allow dropdowns to open without clipping */
+  padding: 0.5rem 1.25rem !important;
+  border-radius: 20px !important; /* Rounded corners that scale nicely with wrapped lines */
+  position: sticky !important;
+  top: 12px !important;
+  z-index: 1000 !important; /* Float above rulers and page content */
+  margin: 1rem auto !important;
+}
+.toolbar-container.glass::before {
+  border-radius: 20px !important; /* Match inner border radius */
 }
 .toolbar-inner {
-  flex-wrap: nowrap !important;
-  overflow-x: auto !important;
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
+  display: flex !important;
+  flex-wrap: wrap !important; /* Wrap instead of hiding overflow to stay accessible */
+  overflow: visible !important;
   padding: 2px 0 !important;
-  gap: 0.25rem !important;
-}
-.toolbar-inner::-webkit-scrollbar {
-  display: none !important;
+  gap: 0.5rem !important;
+  justify-content: center !important;
+  width: 100% !important;
 }
 .toolbar-group {
-  gap: 0.15rem !important;
-  padding: 0 0.35rem !important;
+  display: flex !important;
+  flex-wrap: nowrap !important; /* Force groups like formatting or sizing to stick together */
+  align-items: center !important;
+  gap: 0.25rem !important;
+  padding: 0 0.5rem !important;
 }
 
 /* Sidebar Overrides: Shift from gold to glowing blue neon */

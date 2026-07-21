@@ -37,17 +37,24 @@ const DocumentPage = () => {
     }, []);
 
     const userInfo = useMemo(() => {
-        const isBhagath = user?.fullName?.includes('Bhagath') || user?.username?.includes('bhagath') || user?.primaryEmailAddress?.emailAddress?.includes('bhagath');
-        const displayName = isBhagath ? 'Sam' : (user?.fullName || user?.username || 'Anonymous');
-        const displayAvatar = isBhagath ? 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150' : (user?.imageUrl || '');
+        const displayName = user?.fullName || user?.username || 'Anonymous';
+        const displayAvatar = user?.imageUrl || '';
+        
+        let hash = 0;
+        const hashStr = displayName + (user?.id || '');
+        for (let i = 0; i < hashStr.length; i++) {
+            hash = hashStr.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const colors = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'];
+        const color = colors[Math.abs(hash) % colors.length];
+
         return {
             id: user?.id,
             name: displayName,
-            color: ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'][Math.floor(Math.random() * 6)],
+            color,
             avatar: displayAvatar,
         };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [user?.id, user?.fullName, user?.username, user?.imageUrl]);
+    }, [user]);
 
     useEffect(() => {
         console.log('[DEBUG] Component mounted');
@@ -142,12 +149,12 @@ const DocumentPage = () => {
 
     const canEdit = role === "owner" || role === "editor";
 
-    // Sync local awareness details
     useEffect(() => {
         if (userInfo && userInfo.id && collab?.provider) {
             console.log('[DEBUG] Setting local awareness state:', userInfo.name, userInfo.id);
             collab.provider.awareness.setLocalStateField("user", {
                 id: userInfo.id,
+                userId: userInfo.id,
                 name: userInfo.name,
                 color: userInfo.color,
                 avatar: userInfo.avatar
